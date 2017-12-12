@@ -53,8 +53,7 @@ Les services devraient être disponibles aux adresses suivantes (adapter l'IP) :
 
 ## Récupérer le dataset Enron
 
-(ajouter le lien Google Drive)
-
+https://drive.google.com/open?id=1GakX7-xa4GqNJ4WzaZdZmjRtaRsWi9qX
 
 ## Préparer le dataset Enron pour l'ingestion
 
