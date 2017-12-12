@@ -18,7 +18,7 @@ Les moteurs de recherche sont là pour vous :)
 
 * Avec docker-toolbox pour Mac ou Windows, utilisant VirtualBox
 
-docker-machine create -d virtualbox --virtualbox-memory "8192" default
+`docker-machine create -d virtualbox --virtualbox-memory "8192" default`
 
 * Avec Docker for Windows
 
