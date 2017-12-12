@@ -46,7 +46,7 @@ https://docs.docker.com/compose/install/#install-compose
 
 Les services devraient être disponibles aux adresses suivantes (adapter l'IP) :
 
-* Nifi http://192.168.99.100:8080/nifi/
+* NiFi http://192.168.99.100:8080/nifi/
 * Kibana : http://192.168.99.100:5601/
 * Cerebro : http://192.168.99.100:9000
 * ElasticSearch : http://192.168.99.100:9200/
@@ -57,15 +57,35 @@ https://drive.google.com/open?id=1GakX7-xa4GqNJ4WzaZdZmjRtaRsWi9qX
 
 ## Préparer le dataset Enron pour l'ingestion
 
-* Copier le tar dans le volume de données de Nifi : `docker cp enron_small.tgz enron_nifi_1:/nifi_data/`
-* Changer le propriétaire des fichiers dans le volume : `docker exec -u 0 -ti enron_nifi_1 chown -R nifi:nifi /nifi_data`
-* Décompresser les données : `docker exec -ti enron_nifi_1 tar -xf /nifi_data/enron_small.tgz -C /nifi_data`
-* Vérification ``docker exec -ti enron_nifi_1 ls /nifi_data/maildir ` devrait donner quelque chose de ressemblant au bloc ci-dessous :
+```
+#Copier le tar dans le volume de données de NiFi
+docker cp enron_small.tgz enron_nifi_1:/nifi_data/
+
+Changer le propriétaire des fichiers dans le volume
+docker exec -u 0 -ti enron_nifi_1 chown -R nifi:nifi /nifi_data
+
+#Décompresser les données
+docker exec -ti enron_nifi_1 tar -xf /nifi_data/enron_small.tgz -C /nifi_data
+
+#Vérification:
+docker exec -ti enron_nifi_1 ls /nifi_data/maildir 
+
+#devrait donner quelque chose de ressemblant au bloc ci-dessous :
+#allen-p      fischer-m       kitchen-l        phanis-s       smith-m
+#arnold-j     forney-j        kuykendall-t     pimenov-v      solberg-g
+#arora-h      fossum-d        lavorato-j       platter-p      south-s
+#badeer-r     gang-l          lay-k            presto-k       staab-t
+```
+
+## Installer le processor Apache OpenNLP pour Nifi
 
 ```
-allen-p      fischer-m       kitchen-l        phanis-s       smith-m
-arnold-j     forney-j        kuykendall-t     pimenov-v      solberg-g
-arora-h      fossum-d        lavorato-j       platter-p      south-s
-badeer-r     gang-l          lay-k            presto-k       staab-t
-```
+#Copier le script d'installation dans le conteneur
+docker cp nifi-open-nlp-setup.sh enron_nifi_1:/nifi_data
 
+#Lancer le script d'installation
+docker exec -ti enron_nifi_1 bash /nifi_data/nifi-open-nlp-setup.sh
+
+#Redémarrer le conteneur NiFi
+docker restart enron_nifi_1
+```
