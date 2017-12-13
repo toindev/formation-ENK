@@ -97,3 +97,23 @@ docker exec -ti enron_nifi_1 bash /nifi_data/nifi-open-nlp-setup.sh
 #Redémarrer le conteneur NiFi
 docker restart enron_nifi_1
 ```
+## Configuration du processeur Jolt
+
+```
+[
+  {
+    "operation": "shift",
+    "spec": {
+      "email.headers.from.*": "from",
+      "email.headers.to.*": "to",
+      "email.headers.cc.*": "cc",
+      "email.headers.bcc.*": "bcc",
+      "email.headers.sent_date": "sent_date",
+      "email.headers.subject": "subject",
+      "email.body": "body",
+      "names": "names",
+      "locations": "locations"
+    }
+  }
+]
+```
