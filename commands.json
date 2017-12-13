@@ -1,0 +1,39 @@
+PUT emails
+{
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 1, 
+            "number_of_replicas" : 1 
+        }
+    }
+}
+
+PUT emails/_mapping/emails
+{
+  "properties": {
+    "bcc": {
+      "type": "keyword"
+    },
+    "body": {
+      "type": "text"
+    },
+    "cc": {
+      "type": "keyword"
+    },
+    "from": {
+      "type": "keyword"
+    },
+    "sent_date": {
+      "type": "date",
+      "format": "EEEE MMM d HH:mm:ss z yyyy",
+      "locale": "en_US"
+    },
+    "subject": {
+      "type": "text"
+    },
+    "to": {
+      "type": "keyword"
+    }
+  }
+}
+
