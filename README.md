@@ -38,6 +38,14 @@ Si docker-compose n'est pas installé par la distribution de Docker :
 
 https://docs.docker.com/compose/install/#install-compose
 
+
+# Expression régulière extract body
+
+```
+^$\n(.*)
+```
+
+
 ## Lancer les conteneurs
 
 * Lancement dans le dossier contenant le docker-compose.yaml ``docker-compose -p enron up -d``
