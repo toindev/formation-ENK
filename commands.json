@@ -15,7 +15,8 @@ PUT emails/_mapping/emails
       "type": "keyword"
     },
     "body": {
-      "type": "text"
+      "type": "text",
+      "fielddata": true
     },
     "cc": {
       "type": "keyword"
@@ -29,7 +30,8 @@ PUT emails/_mapping/emails
       "locale": "en_US"
     },
     "subject": {
-      "type": "text"
+      "type": "text",
+      "fielddata": true
     },
     "to": {
       "type": "keyword"
