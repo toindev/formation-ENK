@@ -2,7 +2,7 @@
 
 ## Installation de docker
 
-### Windows 7 
+### Windows 7
 
 Docker toolbox : https://download.docker.com/win/stable/DockerToolbox.exe
 
@@ -24,17 +24,17 @@ Les moteurs de recherche sont là pour vous :)
 
 Voir dans les paramètres de Docker pour passer la VM à 8GB de RAM.
 
-* Linux 
+* Linux
 
 Pas de VM, on tourne dans le même noyau
 
-* Docker for Mac 
+* Docker for Mac
 
 ???
 
 ## Installation de docker-compose
 
-Si docker-compose n'est pas installé par la distribution de Docker : 
+Si docker-compose n'est pas installé par la distribution de Docker :
 
 https://docs.docker.com/compose/install/#install-compose
 
@@ -68,7 +68,7 @@ docker exec -u 0 -ti enron_nifi_1 chown -R nifi:nifi /nifi_data
 docker exec -ti enron_nifi_1 tar -xf /nifi_data/enron_small.tgz -C /nifi_data
 
 #Vérification:
-docker exec -ti enron_nifi_1 ls /nifi_data/maildir 
+docker exec -ti enron_nifi_1 ls /nifi_data/maildir
 
 #devrait donner quelque chose de ressemblant au bloc ci-dessous :
 #allen-p      fischer-m       kitchen-l        phanis-s       smith-m

@@ -1,0 +1,294 @@
+version: "3.3"
+
+services:
+
+  elastic:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_elasticsearch_${DH_BRANCH}
+    environment:
+    - ES_JAVA_OPTS=-Xms2g -Xmx2g
+    - discovery.zen.ping.unicast.hosts=elastic
+    ulimits:
+      memlock: -1
+      nproc: 65536
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+    - dh_es_data:/usr/share/elasticsearch/data
+    networks:
+    - datahub
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: dnsrr
+      placement:
+        constraints:
+        - node.labels.es = true
+      
+  storage-api:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_storage-api_${DH_BRANCH}
+    environment:
+    - ELASTIC_IP=elastic
+    - IDP_URL=${IDP_URL}
+    - DISABLE_DATAHUB_SECURITY=true
+    - REPOSITORY_TYPE=${REPOSITORY_TYPE}
+    - SETTINGS_PATH=/dh_config/storage/repository.json
+    - SWAGGER_HOST=${SWAGGER_HOST}
+    ports:
+    - 8180:8180
+    depends_on:
+    - elastic
+    volumes:
+    - dh_config_storage:/dh_config/storage
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.app = true
+
+  service-api:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_service-api_${DH_BRANCH}
+    environment:
+    - ELASTIC_IP=elastic
+    - IDP_URL=${IDP_URL}
+    - DISABLE_DATAHUB_SECURITY=true
+    - REPOSITORY_TYPE=${REPOSITORY_TYPE}
+    - SETTINGS_PATH=/dh_config/service/repository.json
+    - TEMPLATE_STORAGE=S3Storage
+    - SWAGGER_HOST=${SWAGGER_HOST}
+    ports:
+    - 8280:8280
+    depends_on:
+    - elastic
+    volumes:
+    - dh_config_service:/dh_config/service
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.app = true
+
+  referential-api:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_referential-api_${DH_BRANCH}
+    environment:
+    - ELASTIC_IP=elastic
+    - IDP_URL=${IDP_URL}
+    - DISABLE_DATAHUB_SECURITY=true
+    - STORAGE_HOST=storage-api
+    - STORAGE_PORT=8180
+    - SWAGGER_HOST=${SWAGGER_HOST}
+    ports:
+    - 8281:8281
+    depends_on:
+    - storage-api
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.app = true
+      
+  indexation:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_indexation_${DH_BRANCH}
+    ports:
+    - 8282:8080
+    volumes:
+    - dh_config_indexation:/opt/nifi/nifi-1.4.0/conf
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.app = true
+
+  search-portal:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_search-portal_${DH_BRANCH}
+    ports:
+    - 8283:80
+    volumes:
+    - dh_config_search-portal:/usr/share/nginx/html/search-portal/config
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.app = true
+
+  referential-portal:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_referential-portal_${DH_BRANCH}
+    ports:
+    - 8284:80
+    volumes:
+    - dh_config_referential-portal:/usr/share/nginx/html/referential-portal/config
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1        
+      placement:
+        constraints:
+        - node.labels.app = true
+        
+  unit-api:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_unit-api_${DH_BRANCH}
+    ports:
+    - 8285:8285
+    environment:
+    - ELASTIC_IP=elastic
+    - IDP_URL=${IDP_URL}
+    - DISABLE_DATAHUB_SECURITY=true
+    - STORAGE_HOST=storage-api
+    - STORAGE_PORT=8180
+    - SWAGGER_HOST=${SWAGGER_HOST}    
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"        
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.app = true
+
+  unit-portal:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_unit-portal_${DH_BRANCH}
+    ports:
+    - 8286:80
+    volumes:
+    - dh_config_unit-portal:/usr/share/nginx/html/unit-portal/config
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.app = true
+              
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.5.2
+    ports:
+      - "5601:5601"
+    environment:
+      SERVER_NAME: kibana
+      ELASTICSEARCH_URL: http://elastic:9200
+      SERVER_BASEPATH: /kibana
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.app = true
+      
+  reverse-proxy:
+    image: 379218615267.dkr.ecr.eu-west-1.amazonaws.com/rd-sandbox-docker-repo:dh_reverse-proxy_${DH_BRANCH}
+    ports:
+    - 80:80
+    depends_on:
+    - elastic
+    - storage-api
+    - service-api
+    - referential-api
+    - indexation
+    - search-portal
+    - referential-portal
+    - unit-api
+    - unit-portal
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "20m"
+        max-file: "10"
+    networks:
+    - datahub
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+        - node.labels.app = true
+            
+networks:
+  datahub:
+    driver: overlay
+    driver_opts:
+      encrypted: "true"
+      
+volumes:
+    dh_config_indexation:
+      external: true
+    dh_config_storage:
+      external: true
+    dh_config_service:
+      external: true
+    dh_config_search-portal:
+      external: true
+    dh_config_unit-portal:
+      external: true
+    dh_config_referential-portal:
+      external: true
+    dh_es_data:
+      external: true
