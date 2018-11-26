@@ -36,7 +36,7 @@ services:
       - "traefik.frontend.auth.basic=enk:$$apr1$$.fGwMdNh$$MqtT50Ihijl8GmoaGaaT31"
     build: ./nifi/
     environment:
-      - NIFI_WEB_PROXY_CONTEXT_PATH=""
+      - NIFI_WEB_PROXY_CONTEXT_PATH="/"
       - NIFI_WEB_PROXY_HOST=${PROXY_HOST}
     ports:
     - 8080:8080
@@ -81,7 +81,7 @@ services:
     image: traefik # The official Traefik docker image
     command: --api --docker # Enables the web UI and tells Traefik to listen to docker
     ports:
-      - "88:80"     # The HTTP port
-      - "8088:8080" # The Web UI (enabled by --api)
+      - ${PROXY_PORT}:80     # The HTTP port
+      - 8088:8080 # The Web UI (enabled by --api)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events

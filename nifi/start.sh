@@ -19,6 +19,9 @@ scripts_dir='/opt/nifi/scripts'
 
 [ -f "${scripts_dir}/common.sh" ] && . "${scripts_dir}/common.sh"
 
+echo NIFI_WEB_PROXY_CONTEXT_PATH=$NIFI_WEB_PROXY_CONTEXT_PATH
+echo NIFI_WEB_PROXY_HOST=$NIFI_WEB_PROXY_HOST
+
 # Establish baseline properties
 prop_replace 'nifi.web.http.port'               "${NIFI_WEB_HTTP_PORT:-8080}"
 prop_replace 'nifi.web.http.host'               "${NIFI_WEB_HTTP_HOST:-$HOSTNAME}"
