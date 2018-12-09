@@ -5,6 +5,8 @@ export PROXY_HOST=enk00.northeurope.cloudapp.azure.com
 
 export PROXY_PORT=80
 
+docker-compose -p enk stop
+docker-compose -p enk rm
 docker-compose -p enk up -d
 
 #Permet de faire du nettoyage des potentiels précédents lancements, sans
