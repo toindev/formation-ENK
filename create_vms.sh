@@ -1,5 +1,4 @@
-INSTANCE=enk01
-ADMINPWD=toto
+INSTANCE=$1
 
 az vm create \
 --size Standard_D2_v3 \
@@ -7,6 +6,6 @@ az vm create \
 --image ENK \
 --admin-username enk \
 --nsg enk_nsg \
---admin-password $ADMINPWD \
+--ssh-key-value id_rsa.pub \
 --name $INSTANCE \
 --public-ip-address-dns-name $INSTANCE
