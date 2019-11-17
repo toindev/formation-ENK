@@ -14,4 +14,4 @@ docker-compose -p enk up -d
 
 # Permet de faire du nettoyage des potentiels précédents lancements, sans
 # supprimer les images nécessaires (vu qu'elles sont déjà lancées)
-docker system prune -f --all --volumes
+#docker system prune -f --all --volumes

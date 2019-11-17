@@ -1,81 +1,32 @@
 # Ingestion du dataset des mails Enron
 
-## Installation de docker
+## Création des VM sur Azure pour le TP
 
-### Windows 7
+* Se connecter au shell Azure
+* Cloner ce repository
+* Se placer dans le dossier Azure
+* Éditer le fichier hostnames avec le bon nombre d'hôtes selon le nombre de participants
+* Lancer le script `create_and_start_vms.sh`
 
-Docker toolbox : https://download.docker.com/win/stable/DockerToolbox.exe
+## Détails des rôles des scripts
 
-### Windows 10
+* `create_vms.sh` crée une machine virtuelle avec en argument son nom d'hôte, depuis l'image préparée en amont.
+* `start_remote_vm.sh` démarre les processus Docker sur la machine créée
+* `create_and_start_vms.sh` lit les noms d'hôtes dans le fichier hostnames et crée et démarre les VMs.
 
-Docker for Windows : https://docs.docker.com/docker-for-windows/install/
-
-### Linux et Mac
-
-Les moteurs de recherche sont là pour vous :)
-
-## Configuration de la machine docker
-
-* Avec docker-toolbox pour Mac ou Windows, utilisant VirtualBox
-
-`docker-machine create -d virtualbox --virtualbox-memory "8192" default`
-
-* Avec Docker for Windows
-
-Voir dans les paramètres de Docker pour passer la VM à 8GB de RAM.
-
-* Linux
-
-Pas de VM, on tourne dans le même noyau
-
-* Docker for Mac
-
-???
-
-## Installation de docker-compose
-
-Si docker-compose n'est pas installé par la distribution de Docker :
-
-https://docs.docker.com/compose/install/#install-compose
-
-## Lancer les conteneurs
-
-* Lancement dans le dossier contenant le docker-compose.yaml ``docker-compose -p enron up -d``
-* Compter un certain temps pour télécharger toutes les images lors du premier lancement (2-3 GB)
-* Récupérer l'IP de l'hôte docker (hors linux, où il s'agit de localhost) ``docker-machine ip default``
+## URL des services
 
 Les services devraient être disponibles aux adresses suivantes (adapter l'IP) :
 
-* NiFi http://192.168.99.100:8080/nifi/
-* Kibana : http://192.168.99.100:5601/
-* Cerebro : http://192.168.99.100:9000
-* ElasticSearch : http://192.168.99.100:9200/
+* NiFi http://hostname.northeurope.cloudapp.azure.com/nifi/
+* Kibana : http://hostname.northeurope.cloudapp.azure.com/kibana
+* ElasticSearch : http://hostname.northeurope.cloudapp.azure.com/elastic
 
 ## Récupérer le dataset Enron
 
 https://drive.google.com/open?id=1GakX7-xa4GqNJ4WzaZdZmjRtaRsWi9qX
 
-## Préparer le dataset Enron pour l'ingestion
-
-```
-#Copier le tar dans le volume de données de NiFi
-docker cp enron_small.tgz enron_nifi_1:/nifi_data/
-
-Changer le propriétaire des fichiers dans le volume
-docker exec -u 0 -ti enron_nifi_1 chown -R nifi:nifi /nifi_data
-
-#Décompresser les données
-docker exec -ti enron_nifi_1 tar -xf /nifi_data/enron_small.tgz -C /nifi_data
-
-#Vérification:
-docker exec -ti enron_nifi_1 ls /nifi_data/maildir
-
-#devrait donner quelque chose de ressemblant au bloc ci-dessous :
-#allen-p      fischer-m       kitchen-l        phanis-s       smith-m
-#arnold-j     forney-j        kuykendall-t     pimenov-v      solberg-g
-#arora-h      fossum-d        lavorato-j       platter-p      south-s
-#badeer-r     gang-l          lay-k            presto-k       staab-t
-```
+Le dataset est déjà présent dans le container NiFi pour faciliter son accès.
 
 ## Installer le processor Apache OpenNLP pour Nifi
 
@@ -90,14 +41,20 @@ docker exec -ti enron_nifi_1 bash /nifi_data/nifi-open-nlp-setup.sh
 docker restart enron_nifi_1
 ```
 
-
 # Expression régulière extract body
+
+Cette expression permet de faire un prétraitement sur le contenu du dataset. 
+
+Il est important de se souvenir que beaucoup de soucis peuvent provenir du formatage de
+la donnée !
 
 ```
 ^$\n(.*)
 ```
 
 ## Configuration du processeur Jolt
+
+Parce que cela prend du temps à déterminer autrement, le TP est déjà bien chargé.
 
 ```
 [
