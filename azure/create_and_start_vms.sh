@@ -1,4 +1,21 @@
-#!/bin/bash
+./create_vms.sh george-boole
+./create_vms.sh edsger-dijkstra
+./create_vms.sh douglas-engelbart
+./create_vms.sh grace-hopper
+./create_vms.sh donald-knuth
+./create_vms.sh ada-lovelace
+./create_vms.sh blaise-pascal
+./create_vms.sh dennis-ritchie
+./create_vms.sh claude-shannon
+./create_vms.sh ken-thompson
 
-# Read from hostames, for each, create_vms then start_remote_vm
-while read in; do ./create_vms.sh $in; ./start_remote_vm.sh $in; done < hostnames
+./start_remote_vm.sh george-boole
+./start_remote_vm.sh edsger-dijkstra
+./start_remote_vm.sh douglas-engelbart
+./start_remote_vm.sh grace-hopper
+./start_remote_vm.sh donald-knuth
+./start_remote_vm.sh ada-lovelace
+./start_remote_vm.sh blaise-pascal
+./start_remote_vm.sh dennis-ritchie
+./start_remote_vm.sh claude-shannon
+./start_remote_vm.sh ken-thompson

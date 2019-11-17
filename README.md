@@ -5,14 +5,13 @@
 * Se connecter au shell Azure
 * Cloner ce repository
 * Se placer dans le dossier Azure
-* Éditer le fichier hostnames avec le bon nombre d'hôtes selon le nombre de participants
-* Lancer le script `create_and_start_vms.sh`
+* Modifier le script `create_and_start_vms.sh` avec le bon nombre de machines
+* Lancer le script `create_and_start_vms.sh`.
 
 ## Détails des rôles des scripts
 
 * `create_vms.sh` crée une machine virtuelle avec en argument son nom d'hôte, depuis l'image préparée en amont.
 * `start_remote_vm.sh` démarre les processus Docker sur la machine créée
-* `create_and_start_vms.sh` lit les noms d'hôtes dans le fichier hostnames et crée et démarre les VMs.
 
 ## URL des services
 
