@@ -1,0 +1,81 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[left=2cm,right=2cm,top=3.2cm,headheight=2cm,bottom=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\AtBeginDocument{\def\labelitemi{$\bullet$}}
+
+\usepackage{fancyhdr}
+\rhead{\parbox[b][1,5cm][t]{4,7cm}{\includegraphics[height=1.3cm]{logo_couleur.png}}} 
+\chead{\parbox[b][1,2cm][t]{5,5cm}{\Huge\textbf{Indexation}}}
+\lhead{\parbox[b][1,5cm][t]{4cm}{Séminaire INSA\\ Sword SA\\ 18/11/2019}}
+
+\begin{document}
+	\pagestyle{fancy}
+	\section*{Introduction}
+	Dans cette partie, nous allons nous intéresser au paramétrage de la base de données afin de pouvoir faire des requêtes utiles aux résultats pertinents pour notre étude à venir.
+	
+	Dans un cas concret, la modélisation de la base dépends de l'usage que l'on aura de celle-ci par la suite. Il faut donc avoir en tête l'usage que l'on peut avoir des données stockées avant de pouvoir définir comment on devrait les stocker.
+	\section*{Présentation de Elasticsearch}
+	\subsection*{Pourquoi Elasticsearch?}
+	ElasticSearch est une base de données NoSQL populaire pour de nombreuses raisons :
+	\begin{itemize}
+		\item Elle a été conçue pour le passage à l'échelle : une base de donnée ElasticSearch est constituée d'un cluster d'un ou plusieurs nœuds. Des répliquas peuvent être mis en place pour l'accessibilité et des shards peuvent être mis en place pour les performances ;
+		\item Elle est majoritairement OpenSource. Une licence est disponible pour accéder à certaines fonctionnalités, mais il est possible de mettre en place une base sans payer de licence ;
+		\item Elle est efficace dans de nombreux \href{https://www.elastic.co/fr/blog/found-uses-of-elasticsearch}{cas d'usage} ;
+		\item ...
+	\end{itemize}
+	\subsection*{Documentation et liens utiles}
+	La documentation d'ElasticSearch est très bien faite.
+	Toute la documentation est disponible sur leur site 
+	 \url{https://www.elastic.co/guide/en/elasticsearch/reference/6.4/index.html}.
+	 
+	Attention à la version, nous utilisons une version 6.4, les fonctionnalités peuvent beaucoup bouger d'une version à l'autre.
+	\section*{Bien indexer ses données pour pouvoir les récupérer}
+	\subsection*{Quelques notions essentielles}
+	La documentation sur les mappings (schémas de la base de donnée) ElasticSearch se trouve \href{https://www.elastic.co/guide/en/elasticsearch/reference/6.4/mapping.html}{ici}.
+	
+	Les différents type de données dans ElasticSearch sont listés \href{https://www.elastic.co/guide/en/elasticsearch/reference/6.4/mapping-types.html}{ici}.
+	Il y a des notions importantes sur les champs string :
+	\begin{description}
+		\item[keyword] Ces champs ne sont pas analysés, c'est à dire qu'ils sont indéxés tel quel. Ce format est idéal pour faire des recherche exacte et prends beaucoup moins de place.
+		\item[text] Ces champ sont analysés, c'est à dire qu'on peut appliquer des transformations afin de faciliter les requêtes et/ou de nettoyer les données. L'\href{https://www.elastic.co/guide/en/elasticsearch/reference/6.4/analysis-standard-analyzer.html}{analyseur par défaut} a été conçu pour traiter simplement du texte en anglais. L'utilisation d'un champ teste est plus couteux tant en terme de mémoire, de disque et donc de temps.
+	\end{description}
+	Le tout est donc de trouver le bon compromis entre la vitesse d'indexation et un requêtage efficace en prenant en compte l'impact de certains choix sur l'usage disque ou mémoire.
+	\subsection*{Les données fournies}
+	Le jeu de données fourni est un sous-ensemble des mails que ce sont envoyée les dirigeants d'Enron avant l'éclatement du scandale.
+	
+	Afin de conserver des temps d'indexation corrects, nous nous sommes limités aux dirigeants les plus hauts placés de la société.
+	
+	Les mails comportent de nombreux champs, plus ou moins utile à l'analyse.
+	
+	Les mails contiennent les champs suivants :
+	\begin{itemize}
+		\item Message-ID
+		\item \textbf{Date}
+		\item From
+		\item \textbf{To}
+		\item \textbf{Subject}
+		\item Mime-Version
+		\item Content-type
+		\item Content-Transfert-Encoding
+		\item \textbf{X-From}
+		\item X-To
+		\item \textbf{X-cc}
+		\item \textbf{X-bcc}
+		\item X-Folder
+		\item X-Origin
+		\item X-FileName
+		\item \textbf{Le corps du mail} se situe à la fin du fichier
+	\end{itemize}
+Les données en gras sont les données minimales prises en compte pour l'analyse.
+	\section*{Pour aller plus loin...}
+	\begin{itemize}
+		\item Mettre en place le mapping pour toutes les données présentes dans le jeu de test;
+		\item Explorer les possibilités en modifiant personnalisant les analyseurs (en modifiant par exemple la liste des stop word).
+	\end{itemize}
+\end{document}          

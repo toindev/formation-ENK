@@ -1,0 +1,83 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[left=2cm,right=2cm,top=3.2cm,headheight=2cm,bottom=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\AtBeginDocument{\def\labelitemi{$\bullet$}}
+
+\usepackage{fancyhdr}
+\rhead{\parbox[b][1,5cm][t]{4,7cm}{\includegraphics[height=1.3cm]{logo_couleur.png}}} 
+\chead{\parbox[b][1,2cm][t]{10cm}{\Huge\textbf{Chaîne de traitement}}}
+\lhead{\parbox[b][1,5cm][t]{4cm}{Séminaire INSA\\ Sword SA\\ 18/11/2019}}
+
+\begin{document}
+	\pagestyle{fancy}
+
+	\section*{Introduction}
+	Dans cette partie, nous allons préparer les données avant l'indexation.
+	
+	Lorsque l'on veut analyser des données, il faut qu'elles soient indexées correctement et donc qu'elles arrivent au bon format et "nettoyées".
+	
+	Il peut arriver qu'on ai un jeu de donnée en entrée avec le poids d'un véhicule et que celui-ci soit au format texte avec un espace dans certaines valeurs. On ne peut alors pas faire de comparaison de poids et donc filtrer sur une partie des données avec ce format.
+	
+	On peut aussi avoir en entrée un seul et même champ qui contient plusieurs informations du même type (par exemple, une chaîne de caractère contenant plusieurs noms séparés par des virgules), voir de type différent (par exemple un champ dimension contenant toutes les 3 dimensions d'un objet).
+	
+	La chaîne de traitement sert donc à préparer les données pour l'indexation.
+	\section*{Présentation de Nifi}
+	\subsection*{Pourquoi Nifi?}
+	Nifi est une solution facile à prendre en main de traitement flux de données.
+	
+	Nifi est un logiciel initialement développé par la NSA et est devenu open source en 2014. Il est donc sécurisé et particulièrement adapté pour un passage à l'échelle et l'édition concurrente.
+	
+	Dans Nifi, les flux de traitement sont visuels et on peut tout à fait éditer un flux en cours de traitement. Le logiciel contient de nombreux composants prêt à l'emploi et est donc une solution idéale pour mettre en place une chaîne de traitement rapidement.
+	\subsection*{Documentation et liens utiles}
+	La documentation officielle de Nifi se trouve \href{https://nifi.apache.org/docs/nifi-docs/html/getting-started.html}{ici}. 
+	
+	La partie réellement essentielle à la manipulation du logicielle est \href{https://nifi.apache.org/docs/nifi-docs/html/getting-started.html#i-started-nifi-now-what}{ici}
+	\section*{Nettoyage et préparation des données}
+	\subsection*{Le jeu de données}
+	Le jeu de données fourni est un sous-ensemble des mails que ce sont envoyée les dirigeants d'Enron avant l'éclatement du scandale.
+	
+	Les mais sont dans un format particulier qu'il faudra parser pour l'indexation dans ElasticSearch.
+	
+	Les mails comportent de nombreux champs, plus ou moins utile à l'analyse.
+	
+	Les mails contiennent les champs suivants :
+	\begin{itemize}
+		\item Message-ID
+		\item \textbf{Date}
+		\item From
+		\item \textbf{To}
+		\item \textbf{Subject}
+		\item Mime-Version
+		\item Content-type
+		\item Content-Transfert-Encoding
+		\item \textbf{X-From}
+		\item X-To
+		\item \textbf{X-cc}
+		\item \textbf{X-bcc}
+		\item X-Folder
+		\item X-Origin
+		\item X-FileName
+		\item \textbf{Le corps du mail} se situe à la fin du fichier, il faudra mettre en place une règle particulière pour récupérer ce champ.
+	\end{itemize}
+	Les données en gras sont les données minimales prises en compte pour l'analyse.
+	\subsection*{Le traitement}
+	La première étape est la récupération des différents champs du mail. Il faut donc lire les fichier et parser les données.
+	
+	Il faut ensuite formater les données, par exemple séparer les différents noms dans les destinataires des mails, nettoyer les corps de mail, ...
+	
+	Il faudra aussi préparer l'indexation dans ElasticSearch en mettant les données dans un format json compatible avec le mapping prévu pour ElasticSearch.
+
+	On peut enfin lancer l'indexation dans ElasticSearch.
+	\section*{Pour aller plus loin...}
+	\begin{itemize}
+		\item Traiter les autres données avant de les indexer pour l'analyse;
+		\item Traiter les réponses de mail;
+		\item Traiter les mails transférés;
+	\end{itemize}
+\end{document}          

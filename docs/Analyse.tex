@@ -1,0 +1,41 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[left=2cm,right=2cm,top=3.2cm,headheight=2cm,bottom=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\AtBeginDocument{\def\labelitemi{$\bullet$}}
+
+\usepackage{fancyhdr}
+\rhead{\parbox[b][1,5cm][t]{4,7cm}{\includegraphics[height=1.3cm]{logo_couleur.png}}} 
+\chead{\parbox[b][1,2cm][t]{5,5cm}{\Huge\textbf{Analyse}}}
+\lhead{\parbox[b][1,5cm][t]{4cm}{Séminaire INSA\\ Sword SA\\ 18/11/2019}}
+
+\begin{document}
+	\pagestyle{fancy}
+	\section*{Introduction}
+	On entre dans le cœur du sujet. C'est ici que nous allons voir comment on peut analyser nos données pour tenter de mettre en évidence les instigateurs des manœuvres frauduleuses, et toutes les personnes impliquées.
+	
+	Dans cette partie, nous allons utiliser un outil nous permettant de visualiser les données sous de nombreux angles. A nous de trouver les bons moyens de faire parler les données.
+	\section*{Présentation de Kibana}
+	\subsection*{Pourquoi Kibana?}
+	Kibana fait partie de la suite Elastic et est particulièrement adapté à la visualisation des données présentes dans des index ElasticSearch.
+	
+	Kibana est aussi partiellement open source et les visualisation sont assez complète pour pouvoir réaliser des indexations assez poussées.
+	\subsection*{Documentation et liens utiles}
+		Toute la documentation est disponible sur leur site 
+	\url{https://www.elastic.co/guide/en/kibana/6.4/index.html}.
+	
+	Attention à la version, nous utilisons une version 6.4, les fonctionnalités peuvent beaucoup bouger d'une version à l'autre.
+	
+	\section*{Se lancer dans la data visualisation}
+	Cette partie est entièrement ouverte. On peut tenter de visualiser les liens entre les personnes, trouver des termes suspects, analyser les fréquences des mails, ...
+	
+	Plus d'information sur la visualisation des données dans Kibana peuvent être trouvées \href{https://www.elastic.co/guide/en/kibana/6.4/tutorial-build-dashboard.html}{ici}.
+	
+	Au fil de l'avancée des travaux, vous constaterez peut-être que certains traitements auraient été utiles pour visualiser certaines choses. 
+	
+\end{document}  
